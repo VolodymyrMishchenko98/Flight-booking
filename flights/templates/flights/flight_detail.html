@@ -1,0 +1,89 @@
+{% extends "flights/base.html" %}
+
+{% block title %}{{ flight.route }} - SkyDesk{% endblock %}
+
+{% block content %}
+<section class="detail-header">
+    <div class="container">
+        <a class="back-link" href="{% url 'flights:flight_list' %}">Back to flights</a>
+        <div class="row align-items-end g-4 mt-2">
+            <div class="col-lg-8">
+                <p class="eyebrow mb-2">{{ flight.airline }} &middot; {{ flight.aircraft }}</p>
+                <h1>{{ flight.departure_airport.city }} to {{ flight.arrival_airport.city }}</h1>
+                <p class="lead mb-0">{{ flight.departure_airport.code }} to {{ flight.arrival_airport.code }}</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <span class="detail-price">${{ flight.price }}</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="info-panel">
+                <h2>Flight details</h2>
+                <div class="timeline">
+                    <div>
+                        <span class="time">{{ flight.departure_time|date:"H:i" }}</span>
+                        <strong>{{ flight.departure_airport.name }}</strong>
+                        <p>{{ flight.departure_airport.city }}, {{ flight.departure_airport.country }}</p>
+                    </div>
+                    <div>
+                        <span class="time">{{ flight.arrival_time|date:"H:i" }}</span>
+                        <strong>{{ flight.arrival_airport.name }}</strong>
+                        <p>{{ flight.arrival_airport.city }}, {{ flight.arrival_airport.country }}</p>
+                    </div>
+                </div>
+                <div class="detail-grid mt-4">
+                    <div>
+                        <span>Date</span>
+                        <strong>{{ flight.departure_time|date:"F d, Y" }}</strong>
+                    </div>
+                    <div>
+                        <span>Duration</span>
+                        <strong>{{ flight.duration }}</strong>
+                    </div>
+                    <div>
+                        <span>Aircraft</span>
+                        <strong>{{ flight.aircraft }}</strong>
+                    </div>
+                    <div>
+                        <span>Available seats</span>
+                        <strong>{{ flight.available_seats }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            {% if user.is_authenticated %}
+                <form method="post" class="booking-panel">
+                    {% csrf_token %}
+                    <h2>Reserve tickets</h2>
+                    <p class="text-muted">Your booking is checked inside a database transaction before seats are reserved.</p>
+                    {% for field in form %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <div class="invalid-note">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <button class="btn btn-primary btn-lg w-100" type="submit" {% if flight.available_seats == 0 %}disabled{% endif %}>
+                        {% if flight.available_seats == 0 %}Sold out{% else %}Confirm booking{% endif %}
+                    </button>
+                </form>
+            {% else %}
+                <div class="booking-panel text-center">
+                    <h2>Reserve tickets</h2>
+                    <p class="text-muted mb-4">Log in or create an account to book this flight.</p>
+                    <a class="btn btn-primary btn-lg w-100 mb-2" href="{% url 'accounts:login' %}?next={{ request.path }}">Log in to book</a>
+                    <a class="btn btn-outline-primary btn-lg w-100" href="{% url 'accounts:signup' %}">Create account</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

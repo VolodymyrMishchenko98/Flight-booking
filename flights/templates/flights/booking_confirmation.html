@@ -1,0 +1,47 @@
+{% extends "flights/base.html" %}
+
+{% block title %}Booking confirmed - SkyDesk{% endblock %}
+
+{% block content %}
+<section class="confirmation-wrap">
+    <div class="container">
+        <div class="ticket">
+            <div class="ticket-main">
+                <p class="eyebrow text-accent mb-2">Booking confirmed</p>
+                <h1>{{ booking.flight.departure_airport.code }} to {{ booking.flight.arrival_airport.code }}</h1>
+                <div class="ticket-grid">
+                    <div>
+                        <span>Passenger</span>
+                        <strong>{{ booking.full_name }}</strong>
+                    </div>
+                    <div>
+                        <span>Email</span>
+                        <strong>{{ booking.email }}</strong>
+                    </div>
+                    <div>
+                        <span>Airline</span>
+                        <strong>{{ booking.flight.airline }}</strong>
+                    </div>
+                    <div>
+                        <span>Seats</span>
+                        <strong>{{ booking.seats }}</strong>
+                    </div>
+                    <div>
+                        <span>Departure</span>
+                        <strong>{{ booking.flight.departure_time|date:"M d, Y H:i" }}</strong>
+                    </div>
+                    <div>
+                        <span>Booking ID</span>
+                        <strong>#{{ booking.id }}</strong>
+                    </div>
+                </div>
+                <a class="btn btn-primary mt-4" href="{% url 'flights:flight_list' %}">Search another flight</a>
+            </div>
+            <div class="ticket-side">
+                <span>SkyDesk</span>
+                <strong>${{ booking.flight.price }}</strong>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

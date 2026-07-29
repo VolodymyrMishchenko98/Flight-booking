@@ -1,0 +1,410 @@
+:root {
+    --ink: #16213e;
+    --muted: #667085;
+    --line: #d8dee9;
+    --paper: #ffffff;
+    --soft: #f5f8fb;
+    --primary: #1f7a8c;
+    --primary-dark: #14505c;
+    --accent: #ff7f50;
+    --gold: #f4b942;
+}
+
+body {
+    background: var(--soft);
+    color: var(--ink);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.app-nav {
+    background: rgba(22, 33, 62, 0.96);
+    box-shadow: 0 10px 30px rgba(22, 33, 62, 0.16);
+}
+
+.message-stack {
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 78px;
+    z-index: 20;
+}
+
+.hero {
+    background:
+        linear-gradient(110deg, rgba(22, 33, 62, 0.88), rgba(31, 122, 140, 0.68)),
+        url("https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1800&q=80") center/cover;
+    color: white;
+}
+
+.hero-overlay {
+    min-height: 560px;
+    padding: 104px 0 72px;
+}
+
+.hero h1,
+.detail-header h1,
+.confirmation-wrap h1 {
+    font-size: clamp(2.2rem, 5vw, 4.8rem);
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1;
+}
+
+.eyebrow {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.text-accent {
+    color: var(--accent) !important;
+}
+
+.search-panel,
+.flight-card,
+.info-panel,
+.booking-panel,
+.ticket {
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(216, 222, 233, 0.9);
+    border-radius: 8px;
+    box-shadow: 0 24px 70px rgba(22, 33, 62, 0.14);
+}
+
+.search-panel {
+    padding: 28px;
+}
+
+.form-control,
+.form-select,
+input,
+select {
+    border-color: #c8d2dc;
+    border-radius: 6px !important;
+    min-height: 46px;
+}
+
+.search-panel input,
+.search-panel select,
+.booking-panel input {
+    display: block;
+    width: 100%;
+}
+
+.btn {
+    border-radius: 6px;
+    font-weight: 700;
+}
+
+.btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.btn-outline-primary {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline-primary:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+}
+
+.section-title {
+    font-size: 2.1rem;
+    font-weight: 800;
+}
+
+.airline-filter {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.filter-pill {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink);
+    font-size: 0.9rem;
+    padding: 8px 14px;
+    text-decoration: none;
+}
+
+.filter-pill.active,
+.filter-pill:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: white;
+}
+
+.flight-card {
+    padding: 24px;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.flight-card:hover {
+    box-shadow: 0 28px 80px rgba(22, 33, 62, 0.2);
+    transform: translateY(-3px);
+}
+
+.flight-card .airline {
+    color: var(--primary);
+    font-weight: 800;
+}
+
+.flight-card h3 {
+    font-size: 1.75rem;
+    font-weight: 800;
+}
+
+.flight-card h3 span::before {
+    color: var(--accent);
+    content: "->";
+}
+
+.price,
+.detail-price {
+    background: #fff6df;
+    border: 1px solid #f8dfa0;
+    border-radius: 999px;
+    color: #7a4b00;
+    font-weight: 900;
+    padding: 8px 14px;
+    white-space: nowrap;
+}
+
+.detail-price {
+    display: inline-block;
+    font-size: 1.4rem;
+}
+
+.route-line {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+}
+
+.route-line::before {
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    content: "";
+    flex: 1;
+    height: 3px;
+}
+
+.route-line span {
+    background: white;
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+    height: 14px;
+    width: 14px;
+}
+
+.route-line span:last-child {
+    border-color: var(--accent);
+}
+
+.small-info span,
+.detail-grid span,
+.ticket-grid span {
+    color: var(--muted);
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.small-info strong,
+.detail-grid strong,
+.ticket-grid strong {
+    display: block;
+    margin-top: 2px;
+}
+
+.empty-state {
+    background: white;
+    border: 1px dashed #b7c3cf;
+    border-radius: 8px;
+    padding: 48px;
+    text-align: center;
+}
+
+.detail-header {
+    background:
+        linear-gradient(120deg, rgba(22, 33, 62, 0.93), rgba(31, 122, 140, 0.76)),
+        url("https://images.unsplash.com/photo-1556388158-158ea5ccacbd?auto=format&fit=crop&w=1800&q=80") center/cover;
+    color: white;
+    padding: 88px 0 56px;
+}
+
+.nav-link {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+}
+
+.nav-link:hover {
+    color: white;
+}
+
+.navbar-nav .btn-link {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 1rem;
+}
+
+.navbar-nav .btn-link:hover {
+    color: white;
+    text-decoration: none;
+}
+
+.back-link {
+    color: rgba(255, 255, 255, 0.82);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.info-panel,
+.booking-panel {
+    padding: 28px;
+}
+
+.info-panel h2,
+.booking-panel h2 {
+    font-size: 1.45rem;
+    font-weight: 800;
+}
+
+.timeline {
+    border-left: 3px solid var(--primary);
+    display: grid;
+    gap: 28px;
+    margin-left: 8px;
+    padding-left: 28px;
+}
+
+.timeline > div {
+    position: relative;
+}
+
+.timeline > div::before {
+    background: var(--accent);
+    border: 4px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--accent);
+    content: "";
+    height: 16px;
+    left: -37px;
+    position: absolute;
+    top: 4px;
+    width: 16px;
+}
+
+.time {
+    color: var(--primary);
+    display: block;
+    font-size: 1.45rem;
+    font-weight: 900;
+}
+
+.timeline p {
+    color: var(--muted);
+    margin: 4px 0 0;
+}
+
+.detail-grid,
+.ticket-grid {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.detail-grid > div,
+.ticket-grid > div {
+    background: #f8fafc;
+    border: 1px solid #e4eaf0;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.invalid-note {
+    color: #b42318;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+.confirmation-wrap {
+    background:
+        linear-gradient(120deg, rgba(245, 248, 251, 0.92), rgba(255, 246, 223, 0.92)),
+        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1800&q=80") center/cover;
+    min-height: calc(100vh - 120px);
+    padding: 88px 0;
+}
+
+.ticket {
+    display: grid;
+    grid-template-columns: 1fr 180px;
+    overflow: hidden;
+}
+
+.ticket-main {
+    padding: 40px;
+}
+
+.ticket-side {
+    align-items: center;
+    background: var(--ink);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    justify-content: center;
+    padding: 24px;
+}
+
+.ticket-side span {
+    color: rgba(255, 255, 255, 0.72);
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.ticket-side strong {
+    color: var(--gold);
+    font-size: 1.8rem;
+}
+
+footer {
+    background: white;
+    border-top: 1px solid var(--line);
+}
+
+@media (max-width: 767px) {
+    .hero-overlay {
+        min-height: auto;
+        padding: 72px 0 44px;
+    }
+
+    .search-panel,
+    .info-panel,
+    .booking-panel,
+    .ticket-main {
+        padding: 20px;
+    }
+
+    .detail-grid,
+    .ticket-grid,
+    .ticket {
+        grid-template-columns: 1fr;
+    }
+
+    .ticket-side {
+        align-items: flex-start;
+    }
+}

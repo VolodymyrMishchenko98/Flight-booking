@@ -1,0 +1,120 @@
+{% extends "flights/base.html" %}
+
+{% block title %}Find flights - SkyDesk{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-overlay">
+        <div class="container">
+            <div class="row align-items-end g-4">
+                <div class="col-lg-6">
+                    <p class="eyebrow mb-2">Airline booking system</p>
+                    <h1>Find the right flight in minutes.</h1>
+                    <p class="lead mb-0">Choose a route, compare prices and reserve seats with instant availability checks.</p>
+                </div>
+                <div class="col-lg-6">
+                    <form method="get" class="search-panel">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="{{ form.origin.id_for_label }}">From</label>
+                                {{ form.origin }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="{{ form.destination.id_for_label }}">To</label>
+                                {{ form.destination }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="{{ form.date.id_for_label }}">Date</label>
+                                {{ form.date }}
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="{{ form.sort.id_for_label }}">Sort</label>
+                                {{ form.sort }}
+                            </div>
+                            {{ form.airline }}
+                            <div class="col-12 d-grid">
+                                <button class="btn btn-primary btn-lg" type="submit">Search flights</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="d-flex flex-column flex-lg-row justify-content-between gap-3 align-items-lg-center mb-4">
+        <div>
+            <p class="eyebrow text-accent mb-1">Available routes</p>
+            <h2 class="section-title mb-0">Flights</h2>
+        </div>
+        <div class="airline-filter">
+            <a class="filter-pill {% if not selected_airline %}active{% endif %}" href="{% url 'flights:flight_list' %}">All airlines</a>
+            {% for airline in airlines %}
+                <a class="filter-pill {% if selected_airline == airline %}active{% endif %}" href="?airline={{ airline|urlencode }}">{{ airline }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for flight in page_obj %}
+            <div class="col-md-6 col-xl-4">
+                <article class="flight-card h-100">
+                    <div class="d-flex justify-content-between align-items-start gap-3">
+                        <div>
+                            <p class="airline mb-1">{{ flight.airline }}</p>
+                            <h3>{{ flight.departure_airport.code }} <span></span> {{ flight.arrival_airport.code }}</h3>
+                        </div>
+                        <span class="price">${{ flight.price }}</span>
+                    </div>
+                    <div class="route-line my-4">
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="row g-3 small-info">
+                        <div class="col-6">
+                            <span>From</span>
+                            <strong>{{ flight.departure_airport.city }}</strong>
+                        </div>
+                        <div class="col-6">
+                            <span>To</span>
+                            <strong>{{ flight.arrival_airport.city }}</strong>
+                        </div>
+                        <div class="col-6">
+                            <span>Departure</span>
+                            <strong>{{ flight.departure_time|date:"M d, H:i" }}</strong>
+                        </div>
+                        <div class="col-6">
+                            <span>Seats</span>
+                            <strong>{{ flight.available_seats }}</strong>
+                        </div>
+                    </div>
+                    <a class="btn btn-outline-primary w-100 mt-4" href="{% url 'flights:flight_detail' flight.pk %}">Details</a>
+                </article>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="empty-state">
+                    <h3>No flights found</h3>
+                    <p>Try another city, airport code, date or airline.</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if page_obj.paginator.num_pages > 1 %}
+        <nav class="mt-5" aria-label="Flight pages">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+                {% endif %}
+                <li class="page-item active"><span class="page-link">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endif %}
+</section>
+{% endblock %}
