@@ -53,3 +53,31 @@ flights/
 python manage.py test flights
 python manage.py check
 ```
+
+## Деплой на Render
+
+1. Создайте новый Web Service на Render из GitHub-репозитория.
+2. Выберите Python.
+3. В поле Build Command вставьте:
+
+```bash
+chmod +x build.sh && ./build.sh
+```
+
+4. В поле Start Command вставьте:
+
+```bash
+gunicorn config.wsgi:application
+```
+
+5. В Environment Variables добавьте:
+
+```text
+DJANGO_SECRET_KEY=your-secret-key
+DJANGO_DEBUG=False
+ALLOWED_HOSTS=your-app-name.onrender.com,localhost,127.0.0.1
+```
+
+6. Нажмите Create Web Service.
+
+Render сам создаст PostgreSQL-базу данных, если вы используете файл render.yaml из репозитория.
