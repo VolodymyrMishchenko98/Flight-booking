@@ -69,9 +69,6 @@ def flight_detail(request, pk):
     )
 
     if request.method == "POST":
-        if not request.user.is_authenticated:
-            messages.error(request, "Please log in to book a flight.")
-            return redirect("accounts:login")
         form = BookingForm(request.POST)
         if form.is_valid():
             try:
@@ -80,6 +77,7 @@ def flight_detail(request, pk):
                     full_name=form.cleaned_data["full_name"],
                     email=form.cleaned_data["email"],
                     seats=form.cleaned_data["seats"],
+                    user=request.user if request.user.is_authenticated else None,
                 )
             except NotEnoughSeats:
                 messages.error(request, "There are not enough free seats for this booking.")

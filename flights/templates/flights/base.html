@@ -9,15 +9,48 @@
     <link rel="stylesheet" href="{% static 'flights/css/styles.css' %}">
     <script>
         (function() {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
+            const storageKey = 'theme';
+            const root = document.documentElement;
+
+            function getStoredTheme() {
+                try {
+                    return localStorage.getItem(storageKey);
+                } catch (error) {
+                    return null;
+                }
+            }
+
+            function applyTheme(theme) {
+                const resolvedTheme = theme === 'dark' ? 'dark' : 'light';
+                root.setAttribute('data-theme', resolvedTheme);
+
+                const body = document.body;
+                if (body) {
+                    body.classList.toggle('dark', resolvedTheme === 'dark');
+                    body.setAttribute('data-theme', resolvedTheme);
+                }
+
+                const icon = document.getElementById('theme-icon');
+                if (icon) {
+                    icon.textContent = resolvedTheme === 'dark' ? '☀️' : '🌙';
+                }
+            }
+
+            const preferredTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            const theme = getStoredTheme() || preferredTheme;
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    applyTheme(theme);
+                });
+            } else {
+                applyTheme(theme);
             }
         })();
     </script>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark app-nav">
+    <nav class="navbar navbar-expand-lg navbar-dark app-nav fixed-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="{% url 'flights:flight_list' %}">
                 <span class="brand-icon">✈</span> SkyDesk
@@ -31,28 +64,25 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'flights:flight_list' %}">Flights</a>
                     </li>
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:profile' %}">Hello, {{ user.first_name|default:user.username }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <form method="post" action="{% url 'accounts:logout' %}" class="d-inline">
-                                {% csrf_token %}
-                                <button type="submit" class="nav-link btn btn-link p-0">Logout</button>
-                            </form>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:signup' %}">Sign up</a>
-                        </li>
-                    {% endif %}
                 </ul>
-                <div class="d-flex align-items-center gap-2">
-                    <a class="nav-link" href="/admin/">Admin</a>
-                    <span class="nav-divider d-none d-lg-block"></span>
+                <div class="navbar-actions">
+                    {% if user.is_authenticated %}
+                        <a class="nav-user-chip" href="{% url 'accounts:profile' %}">
+                            <span class="user-avatar">{{ user.first_name|slice:':1'|default:user.username|slice:':1'|upper }}</span>
+                            <span class="user-meta">
+                                <span class="user-name">{{ user.first_name|default:user.username }}</span>
+                                <span class="user-role">My account</span>
+                            </span>
+                        </a>
+                        <form method="post" action="{% url 'accounts:logout' %}" class="nav-form">
+                            {% csrf_token %}
+                            <button type="submit" class="nav-action-btn">Logout</button>
+                        </form>
+                    {% else %}
+                        <a class="nav-action-link" href="{% url 'accounts:login' %}">Login</a>
+                        <a class="nav-action-link nav-action-link--primary" href="{% url 'accounts:signup' %}">Sign up</a>
+                    {% endif %}
+                    <a class="nav-action-link nav-action-link--ghost" href="/admin/">Admin</a>
                     <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Toggle theme">
                         <span class="theme-icon" id="theme-icon">🌙</span>
                         <span class="theme-label d-none d-sm-inline">Theme</span>
@@ -86,27 +116,31 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function toggleTheme() {
-            const html = document.documentElement;
+            const root = document.documentElement;
+            const body = document.body;
             const icon = document.getElementById('theme-icon');
-            const isDark = html.getAttribute('data-theme') === 'dark';
-            if (isDark) {
-                html.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-                if (icon) { icon.textContent = '🌙'; }
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-                if (icon) { icon.textContent = '☀️'; }
+
+            if (!body) {
+                return;
+            }
+
+            const currentTheme = root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            root.setAttribute('data-theme', nextTheme);
+            body.classList.toggle('dark', nextTheme === 'dark');
+            body.setAttribute('data-theme', nextTheme);
+
+            try {
+                localStorage.setItem('theme', nextTheme);
+            } catch (error) {
+                console.warn('Theme storage is unavailable', error);
+            }
+
+            if (icon) {
+                icon.textContent = nextTheme === 'dark' ? '☀️' : '🌙';
             }
         }
-
-        (function() {
-            const icon = document.getElementById('theme-icon');
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            if (icon) {
-                icon.textContent = isDark ? '☀️' : '🌙';
-            }
-        })();
     </script>
 </body>
 </html>

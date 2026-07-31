@@ -7,7 +7,7 @@ class NotEnoughSeats(Exception):
     pass
 
 
-def book_flight(*, flight_id, full_name, email, seats):
+def book_flight(*, flight_id, full_name, email, seats, user=None):
     with transaction.atomic():
         flight = Flight.objects.select_for_update().get(id=flight_id)
 
@@ -17,9 +17,11 @@ def book_flight(*, flight_id, full_name, email, seats):
         flight.available_seats -= seats
         flight.save(update_fields=["available_seats"])
 
-        return Booking.objects.create(
+        booking = Booking.objects.create(
+            user=user,
             flight=flight,
             full_name=full_name,
             email=email,
             seats=seats,
         )
+        return booking

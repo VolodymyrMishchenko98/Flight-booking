@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.shortcuts import redirect, render
 
+from flights.models import Booking
+
 from .forms import SignUpForm
 
 
@@ -19,4 +21,9 @@ def signup(request):
 
 
 def profile(request):
-    return render(request, "registration/profile.html")
+    bookings = (
+        Booking.objects.filter(user=request.user)
+        .select_related("flight", "flight__departure_airport", "flight__arrival_airport")
+        .order_by("-created_at")
+    )
+    return render(request, "registration/profile.html", {"bookings": bookings})

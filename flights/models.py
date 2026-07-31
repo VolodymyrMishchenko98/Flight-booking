@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 
@@ -70,6 +71,13 @@ class Flight(models.Model):
 
 
 class Booking(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="bookings",
+        null=True,
+        blank=True,
+    )
     full_name = models.CharField(max_length=160)
     email = models.EmailField()
     flight = models.ForeignKey(Flight, on_delete=models.CASCADE, related_name="bookings")
